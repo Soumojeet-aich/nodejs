@@ -79,4 +79,6 @@ module.exports = (app) => {
     api.get('/otpvalid',testCont.otpvalid);
     api.post('/validotp',testCont.validotp);
     api.post('/editprofile',testCont.editprofile)
+    apiauth.get('/changepass',testCont.changepass)
+    apiauth.post('/changepassword',testCont.changepassword)
 }

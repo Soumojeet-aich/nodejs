@@ -17,6 +17,7 @@ const loginLayout = 'signin.ejs';
 const dashboardLayot = 'dashboard.ejs'
 const profileLayot = 'profile.ejs'
 const otpLayout = 'otpvalid.ejs'
+const changepass = 'changepass.ejs'
 var transporter = nodemailer.createTransport({
     service: 'gmail',
     host: 'smtp.gmail.com',
@@ -222,3 +223,35 @@ exports.editprofile = async (req, res,next) => {
     let sendData = { layout : profileLayot,mail : userdetails.mail,name : userdetails.name,profilepicture : userdetails.profilepicture,phone : userdetails.ph,birth : userdetails.dob.toISOString().substr(0,10),maxdate : maxdate};
     return res.render('profile', sendData);
 }
+exports.changepass = async (req, res) => {
+    try {
+        let sendData = { layout : changepass,confirmmsg:""};
+    return res.render('changepass', sendData);
+    } catch (e) {
+        console.log(e)
+    }
+
+}
+exports.changepassword = async (req, res) => {
+    let mongo=await models.user.findOne({
+        _id:req.session.userid
+    })
+    if (mongo) {
+        let passwordmatch =await bcrypt.compare(req.body.curpass,mongo.pass)
+        if(passwordmatch){
+            if(req.body.newpass==req.body.conpass){
+                mongo.pass=await bcrypt.hashSync(req.body.newpass,10)
+                await mongo.save()
+                let sendData = { layout : changepass,confirmmsg:"Password changed sucessfully"};
+                return res.render('changepass', sendData);
+            }
+            else{
+                let sendData = { layout : changepass,confirmmsg:"confirm password not matching with new password"};
+                return res.render('changepass', sendData);
+            }
+        }
+        else{
+            let sendData = { layout : changepass,confirmmsg:"current password is not matching"};
+            return res.render('changepass', sendData);
+        }
+}}
