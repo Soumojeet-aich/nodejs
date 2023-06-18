@@ -18,6 +18,7 @@ const dashboardLayot = 'dashboard.ejs'
 const profileLayot = 'profile.ejs'
 const otpLayout = 'otpvalid.ejs'
 const changepass = 'changepass.ejs'
+const forgotpasslayout = 'forgotpassword.ejs'
 var transporter = nodemailer.createTransport({
     service: 'gmail',
     host: 'smtp.gmail.com',
@@ -255,3 +256,12 @@ exports.changepassword = async (req, res) => {
             return res.render('changepass', sendData);
         }
 }}
+exports.forgotpassword = async (req, res) => {
+    try {
+        let sendData = { layout : forgotpasslayout};
+    return res.render('forgotpassword', sendData);
+    } catch (e) {
+        console.log(e)
+    }
+
+}

@@ -81,4 +81,5 @@ module.exports = (app) => {
     api.post('/editprofile',testCont.editprofile)
     apiauth.get('/changepass',testCont.changepass)
     apiauth.post('/changepassword',testCont.changepassword)
+    api.get('/forgotpassword',testCont.forgotpassword)
 }
