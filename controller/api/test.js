@@ -12,6 +12,7 @@ const { validationResult } = require("express-validator");
 const jwt = require('jsonwebtoken');
 var nodemailer = require('nodemailer');
 const session = require('express-session');
+const { json } = require('body-parser');
 const adminLayout = 'test.ejs';
 const loginLayout = 'signin.ejs';
 const dashboardLayot = 'dashboard.ejs'
@@ -19,6 +20,8 @@ const profileLayot = 'profile.ejs'
 const otpLayout = 'otpvalid.ejs'
 const changepass = 'changepass.ejs'
 const forgotpasslayout = 'forgotpassword.ejs'
+const updatepasslayout = 'forgotpassword1.ejs'
+
 var transporter = nodemailer.createTransport({
     service: 'gmail',
     host: 'smtp.gmail.com',
@@ -258,10 +261,53 @@ exports.changepassword = async (req, res) => {
 }}
 exports.forgotpassword = async (req, res) => {
     try {
-        let sendData = { layout : forgotpasslayout};
+        let sendData = { layout : forgotpasslayout,message:""};
     return res.render('forgotpassword', sendData);
     } catch (e) {
         console.log(e)
     }
 
+}
+exports.forgotpassword1 = async (req, res) => {
+    try {
+    let userdata = await models.user.findOne({
+        mail:req.body.mail
+    })
+    if(userdata){
+        let token = generateJwtToken(userdata._id)
+        let link = "http://localhost:3000/updatepassword?token="+token
+        let mailoption={
+            from:"noreply199810@gmail.com",
+            to:req.body.mail,
+            subject:"FORGOT PASSWORD?",
+            text:`your link to verify your email ${link}`
+        }
+        transporter.sendMail(mailoption,function(e,i){
+            if(e){
+                console.log(e)
+            }
+            else{
+                console.log(i.response)
+                let endtime=new Date(new Date().getTime()+1*60000)
+                let sendData = { layout : forgotpasslayout,message:"a verification mail has been sent to your email.Please check!"};
+        return res.render('forgotpassword', sendData);
+            }
+        })   
+    }
+    else{
+        let sendData = { layout : forgotpasslayout,message:"user not found"};
+        return res.render('forgotpassword', sendData);
+    }
+    } catch (e) {
+        console.log(e)
+    }
+
+}
+exports.updatepassword = async (req, res) => {
+    try {
+        let sendData = { layout : updatepasslayout};
+    return res.render('forgotpassword1', sendData);
+    } catch (e) {
+        console.log(e)
+    }
 }

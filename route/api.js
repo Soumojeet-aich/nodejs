@@ -82,4 +82,7 @@ module.exports = (app) => {
     apiauth.get('/changepass',testCont.changepass)
     apiauth.post('/changepassword',testCont.changepassword)
     api.get('/forgotpassword',testCont.forgotpassword)
+    api.post('/forgotpassword',testCont.forgotpassword1)
+    api.get('/updatepassword',testCont.updatepassword)
+
 }
