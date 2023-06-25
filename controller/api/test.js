@@ -317,8 +317,8 @@ exports.forgotpassword2 = async (req, res) => {
         // const url = URLSearchParams()
         console.log("url",req.query)
         let userid =  "6469bd30527a9c185cff9a19"
-        let userdata = await req.user.findOne({
-        _id:mongoose.Types.ObjectId(userid)
+        let userdata = await models.user.findOne({
+            _id: mongoose.Types.ObjectId("6469bd30527a9c185cff9a19")
         })
         if(userdata){
             
