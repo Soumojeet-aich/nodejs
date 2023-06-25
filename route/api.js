@@ -84,5 +84,5 @@ module.exports = (app) => {
     api.get('/forgotpassword',testCont.forgotpassword)
     api.post('/forgotpassword',testCont.forgotpassword1)
     api.get('/updatepassword',testCont.updatepassword)
-
+    api.post('/forgotpassword1',testCont.forgotpassword2)
 }

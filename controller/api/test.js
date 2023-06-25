@@ -13,6 +13,7 @@ const jwt = require('jsonwebtoken');
 var nodemailer = require('nodemailer');
 const session = require('express-session');
 const { json } = require('body-parser');
+const { URL, URLSearchParams } = require('url');
 const adminLayout = 'test.ejs';
 const loginLayout = 'signin.ejs';
 const dashboardLayot = 'dashboard.ejs'
@@ -305,10 +306,33 @@ exports.forgotpassword1 = async (req, res) => {
 }
 exports.updatepassword = async (req, res) => {
     try {
-        let sendData = { layout : updatepasslayout};
+        let sendData = { layout : updatepasslayout,message:""};
     return res.render('forgotpassword1', sendData);
     } catch (e) {
-        
+        console.log(e)
+    }
+}
+exports.forgotpassword2 = async (req, res) => {
+    try {
+        // const url = URLSearchParams()
+        console.log("url",req.query)
+        let userid =  "6469bd30527a9c185cff9a19"
+        let userdata = await req.user.findOne({
+        _id:mongoose.Types.ObjectId(userid)
+        })
+        if(userdata){
+            
+        if(req.body.newpassword==req.body.confirmpassword){
+            userdata.password=await bcrypt.hashSync(req.body.newpassword,10)
+            await userdata.save()
+            let sendData = { layout : loginLayout,data:"password change"};
+    return res.render('signin', sendData);
+        }else{
+            let sendData = { layout : updatepasslayout,message:"confirm password is not matching"};
+            return res.render('forgotpassword2', sendData);
+        }
+        }
+    } catch (e) {
         console.log(e)
     }
 }
