@@ -308,6 +308,7 @@ exports.updatepassword = async (req, res) => {
         let sendData = { layout : updatepasslayout};
     return res.render('forgotpassword1', sendData);
     } catch (e) {
+        
         console.log(e)
     }
 }
